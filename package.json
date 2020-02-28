@@ -1,6 +1,6 @@
 {
   "name": "debug.macro",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Development macros",
   "main": "debug.macro.js",
   "module": "debug.macro.js",
