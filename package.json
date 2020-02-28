@@ -2,7 +2,10 @@
   "name": "debug.macro",
   "version": "0.0.1",
   "description": "Development macros",
-  "main": "index.js",
+  "main": "debug.macro.js",
+  "module": "debug.macro.js",
+  "types": "debug.macro.d.ts",
+  "typings": "debug.macro.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
