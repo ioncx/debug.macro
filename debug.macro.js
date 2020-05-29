@@ -36,7 +36,7 @@ function debugMacro({ references, state, babel }) {
         ]);
     });
 
-    assertIsDefined.forEach(function assertMacro(referencePath) {
+    assertIsDefined.forEach(function assertIsDefinedMacro(referencePath) {
         if (process.env.NODE_ENV === 'production') {
             referencePath.parentPath.replaceWithMultiple([]);
             return;

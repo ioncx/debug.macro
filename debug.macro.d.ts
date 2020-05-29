@@ -9,7 +9,7 @@ export function assert(condition: boolean, message?: string): void;
 export function assertIsDefined<T>(val: T, message?: string): asserts val is NonNullable<T>
 
 /**
- * expose identifier on window
+ * expose value on window
  * e.g. window.identifier = identifier
  */
-export function expose(identifier: any, as?: string): void;
+export function expose(value: any, as?: string): void;
