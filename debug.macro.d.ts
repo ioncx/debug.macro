@@ -1,7 +1,12 @@
 /**
  * throw an error if condition is not met
  */
-export function assert(condition: boolean, message: string): void;
+export function assert(condition: boolean, message?: string): void;
+
+/**
+ * throw an error if val is a falsy value
+ */
+export function assertIsDefined<T>(val: T, message?: string): asserts val is NonNullable<T>
 
 /**
  * expose identifier on window

@@ -3,7 +3,7 @@ const { createMacro, MacroError } = require('babel-plugin-macros');
 module.exports = createMacro(debugMacro);
 
 function debugMacro({ references, state, babel }) {
-    const { assert = [], expose = [], default: defaultImport = [] } = references;
+    const { assert = [], expose = [], assertIsDefined = [], default: defaultImport = [] } = references;
     const t = babel.types;
 
     assert.forEach(function assertMacro(referencePath) {
@@ -13,7 +13,7 @@ function debugMacro({ references, state, babel }) {
         }
 
         if (referencePath.parentPath.type !== 'CallExpression') {
-            throw new MacroError('assert.macro is a function(condition, message)');
+            throw new MacroError('assert.macro is a function(condition, message?)');
         }
 
         if (defaultImport.length) {
@@ -28,10 +28,40 @@ function debugMacro({ references, state, babel }) {
                 t.blockStatement([
                     t.throwStatement(
                         t.newExpression(t.identifier('Error'), [
-                            t.binaryExpression('+', t.stringLiteral('[Assert Failed]: '), args[1].node)
+                            t.binaryExpression('+', t.stringLiteral('[Assert Failed]: '), args[1] ? args[1].node : t.stringLiteral('no message'))
                         ])
                     )
                 ])
+            )
+        ]);
+    });
+
+    assertIsDefined.forEach(function assertMacro(referencePath) {
+        if (process.env.NODE_ENV === 'production') {
+            referencePath.parentPath.replaceWithMultiple([]);
+            return;
+        }
+
+        if (referencePath.parentPath.type !== 'CallExpression') {
+            throw new MacroError('assertIsDefined.macro is a function(val, message?)');
+        }
+
+        if (defaultImport.length) {
+            throw new MacroError('debug.macro has no default export');
+        }
+
+        const args = referencePath.parentPath.get('arguments');
+
+        referencePath.parentPath.replaceWithMultiple([
+            t.ifStatement(
+              t.unaryExpression('!', args[0].node),
+              t.blockStatement([
+                  t.throwStatement(
+                    t.newExpression(t.identifier('Error'), [
+                        t.binaryExpression('+', t.stringLiteral('[Assert Is Defined Failed] '), args[1] ? args[1].node : t.stringLiteral(''))
+                    ])
+                  )
+              ])
             )
         ]);
     });
